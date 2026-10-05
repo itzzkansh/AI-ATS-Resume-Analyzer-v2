@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { ArrowLeft, RefreshCw } from "lucide-react";
+import { ArrowLeft, RefreshCw, Download } from "lucide-react";
 import api from "../api/axios";
+import SectionRadar from "../components/SectionRadar";
 
 const list = (v) => (Array.isArray(v) ? v : []);
 
@@ -143,7 +144,7 @@ function Result() {
           </div>
           <button
             onClick={() => navigate("/dashboard")}
-            className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700"
+            className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 print:hidden"
           >
             <ArrowLeft size={16} /> Back
           </button>
@@ -162,7 +163,7 @@ function Result() {
             <button
               onClick={handleRetry}
               disabled={retrying}
-              className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-700 disabled:opacity-60"
+              className="mt-6 inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg cursor-pointer hover:bg-blue-700 disabled:opacity-60 print:hidden"
             >
               <RefreshCw size={16} className={retrying ? "animate-spin" : ""} />
               {retrying ? "Analyzing..." : "Retry analysis"}
@@ -197,6 +198,7 @@ function Result() {
             {sections.length > 0 && (
               <section>
                 <h2 className="text-xl font-semibold mb-4">Section Scores</h2>
+                <SectionRadar sections={a.sectionScores} />
                 <div className="space-y-3">
                   {sections.map(([name, value]) => {
                     const v = Math.max(0, Math.min(100, Number(value) || 0));
@@ -288,7 +290,13 @@ function Result() {
               </section>
             )}
 
-            <div className="pt-2 text-center">
+            <div className="pt-2 flex justify-center gap-3 print:hidden">
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-2 text-sm text-white bg-blue-600 px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700"
+              >
+                <Download size={14} /> Download PDF
+              </button>
               <button
                 onClick={handleRetry}
                 disabled={retrying}

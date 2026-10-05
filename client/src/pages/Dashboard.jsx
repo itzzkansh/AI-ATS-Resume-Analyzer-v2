@@ -1,6 +1,8 @@
+import ScoreHistory from "../components/ScoreHistory";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
 import {
   FileText,
   Upload,
@@ -318,7 +320,7 @@ function Dashboard() {
             <div className="border-t border-gray-200" />
             <div className="mt-1 border-t border-gray-100" />
           </div>
-
+          {!loading && <ScoreHistory resumes={resumes} />}
           <section className="relative mt-10">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-900">

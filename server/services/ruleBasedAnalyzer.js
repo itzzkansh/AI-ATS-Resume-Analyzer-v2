@@ -180,8 +180,8 @@ export const analyzeWithRules = (text, jobDescription = "") => {
   // ---- contact ----
   const hasEmail = /[\w.+-]+@[\w-]+\.[\w.]+/.test(text);
   const hasPhone = /(\+?\d[\d\s().-]{8,}\d)/.test(text);
-  const hasLinkedin = /linkedin\.com/i.test(text);
-  const hasGithub = /github\.com/i.test(text);
+  const hasLinkedin = /linkedin/i.test(text);
+  const hasGithub = /github/i.test(text);
   const contact =
     (hasEmail ? 40 : 0) +
     (hasPhone ? 30 : 0) +
