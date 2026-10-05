@@ -9,10 +9,24 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 
 const app = express();
 
-app.set("trust proxy", 1); // needed behind Render's proxy
+app.set("trust proxy", 1);
+
+const allowedOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map((o) => o.trim().replace(/\/$/, ""))
+  .filter(Boolean);
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin))
+        return callback(null, true);
+      return callback(null, false);
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -42,7 +56,6 @@ app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/resume/upload", uploadLimiter);
 app.use("/api/resume", resumeRoutes);
 
-// error handler (multer + everything else)
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     const message =
